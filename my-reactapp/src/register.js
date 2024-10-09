@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -16,7 +18,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://lastback.vercel.app/?vercelToolbarCode=n0xyhfXVTKNV-m3/register', {
+      const response = await fetch('https://lastback.vercel.app/register', { // Use the correct registration endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,12 +29,13 @@ const Register = () => {
       const data = await response.json();
       if (response.ok) {
         alert('Registration successful! Redirecting to login...');
-        window.location.href = '/login'; // Redirect to login after successful registration
+        navigate('/login'); // Redirect to login after successful registration
       } else {
         alert(data.message || 'Registration failed');
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('An unexpected error occurred. Please try again later.');
     }
   };
 
