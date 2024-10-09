@@ -281,7 +281,7 @@ app.use(bodyParser.json());
 
 // CORS configuration
 app.use(cors({
-  origin: ["https://frontend-alpha-three-77.vercel.app", "http://localhost:3000"], 
+  origin: ["https://lastfront.vercel.app", "http://localhost:3000"], 
   methods: ["GET", "POST", "PUT"],
   credentials: true
 }));
