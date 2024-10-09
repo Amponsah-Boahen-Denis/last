@@ -28,11 +28,11 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<EditRecord />} /> {/* Generic edit route */}
+      <Route path="/edit" element={<EditRecord />} /> {/* Generic edit route */}
         <Route path="/edit/:id" element={<EditRecord />} /> {/* Route for editing a specific record */}
         <Route path="/password" element={<ViewRecords />} /> {/* Route for adding a new password */}
         <Route path="/register" element={<Register />} />
-         <Route path="/login" element={<Login />} />
+         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
   );
