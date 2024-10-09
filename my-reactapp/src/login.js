@@ -32,6 +32,7 @@ const Login = () => {
         alert('Login successful!');
         navigate('/'); // Redirect to dashboard after successful login
       } else {
+        navigate('/register')
         alert(data.message || 'Login failed');
       }
     } catch (error) {
