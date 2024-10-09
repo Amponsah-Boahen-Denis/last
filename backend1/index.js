@@ -90,7 +90,7 @@ app.post('/register', async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
-      return res.redirect("/login");
+      return res.status(400).json({ message: "User already exists, please log in." });
     }
     user = await User.create({ username, email, password });
     const token = generateToken(user._id);
@@ -107,11 +107,11 @@ app.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user || !(await user.matchPassword(password))) {
-      return res.redirect("/register")
+      return res.status(401).json({ message: "Invalid email or password. Please register if you don't have an account." });
     }
     const token = generateToken(user._id);
     res.cookie('token', token, { httpOnly: true });
-    return res.redirect("/")
+    return res.status(200).json({ message: 'Login successful', user });
   } catch (error) {
     return res.status(500).json({ error: 'Server error' });
   }
