@@ -17,7 +17,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://lastback.vercel.app/?vercelToolbarCode=n0xyhfXVTKNV-m3/login', {
+      const response = await fetch('https://vercel.live/link/lastback.vercel.app/?via=team-dashboard-project-entity&p=1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
