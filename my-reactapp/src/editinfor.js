@@ -16,7 +16,7 @@ function EditRecord() {
   });
 
   useEffect(() => {
-    axios.get('https://fullstack-mern-api.vercel.app/account')
+    axios.get('https://lastback.vercel.app/?vercelToolbarCode=n0xyhfXVTKNV-m3/account')
       .then(response => {
         setAccounts(response.data);
         const account = response.data.find(acc => acc._id === selectedAccountId);
@@ -48,7 +48,7 @@ function EditRecord() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.put(`https://fullstack-mern-api.vercel.app/account/${selectedAccountId}`, formData)
+    axios.put(`https://lastback.vercel.app/?vercelToolbarCode=n0xyhfXVTKNV-m3/account/${selectedAccountId}`, formData)
       .then(response => {
         //navigate('/'); // Navigate back to the home page
       })
