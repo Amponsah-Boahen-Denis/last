@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -27,21 +27,24 @@ const Login = () => {
 
       const data = await response.json();
       if (response.ok) {
+        // Store the token in a cookie or local storage
+        document.cookie = `token=${data.token}; path=/;`; // Using a cookie for token storage
         alert('Login successful!');
-        window.location.href = '/'; // Redirect to dashboard after successful login
+        navigate('/'); // Redirect to dashboard after successful login
       } else {
         alert(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error:', error);
+      alert('An unexpected error occurred. Please try again later.');
     }
   };
 
-  const handleSubmit3 = (event) => {
-    
+  const handleRegisterRedirect = (event) => {
     event.preventDefault();
-        navigate('/register'); // Navigate back to the home page
+    navigate('/register'); // Navigate back to the register page
   };
+
   return (
     <div style={styles.container}>
       <h2 style={styles.header}>Login</h2>
@@ -65,7 +68,7 @@ const Login = () => {
           style={styles.input}
         />
         <button type="submit" style={styles.button}>Login</button>
-        <button onClick={ handleSubmit3} style={styles.button}>Register</button>
+        <button onClick={handleRegisterRedirect} style={styles.button}>Register</button>
       </form>
     </div>
   );
@@ -104,7 +107,7 @@ const styles = {
     borderRadius: '5px',
     cursor: 'pointer',
     transition: 'background-color 0.3s',
-    marginBottom:"10px",
+    marginBottom: "10px",
   },
   buttonHover: {
     backgroundColor: '#1b4d3e',
