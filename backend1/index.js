@@ -128,7 +128,7 @@ app.get('/', protect, (req, res) => {
 });
 
 // GET all accounts
-app.get('/account', protect, async (req, res) => {
+app.get('/account', async (req, res) => {
   try {
     const accounts = await Account.find();
     res.json(accounts);
