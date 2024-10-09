@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config();
 const app = express();
-
+const tok "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"
 // Middleware setup
 app.use(express.json());
 app.use(cookieParser());
@@ -63,7 +63,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 // JWT token generation function
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '10d' });
+  return jwt.sign({ id }, tok, { expiresIn: '10d' });
 };
 
 // Middleware to protect routes
@@ -73,7 +73,7 @@ const protect = async (req, res, next) => {
     return res.status(401).json({ message: 'No token, not authorized' });
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, tok);
     req.user = await User.findById(decoded.id).select('-password');
     next();
   } catch (error) {
