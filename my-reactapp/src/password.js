@@ -26,7 +26,7 @@ function AddPassword() {
     };
 
     // Send POST request to the server to add a new password entry
-    axios.post('https://fullstack-mern-api.vercel.app/account', newAccount)
+    axios.post('https://lastback.vercel.app/?vercelToolbarCode=n0xyhfXVTKNV-m3/account', newAccount)
       .then(response => {
         setMessage('Password added successfully!');
         // Clear form fields after successful submission
