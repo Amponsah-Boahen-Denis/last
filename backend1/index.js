@@ -9,7 +9,8 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config();
 const app = express();
-const tok "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"
+const tok = "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"; // Keep your secret secure
+
 // Middleware setup
 app.use(express.json());
 app.use(cookieParser());
@@ -17,9 +18,9 @@ app.use(bodyParser.json());
 
 // CORS configuration
 app.use(cors({
-  origin: ["https://lastfront.vercel.app", "http://localhost:3000"], 
-  methods: ["GET", "POST", "PUT"],
-  credentials: true // This allows cookies to be included in the requests
+  origin: ["https://lastfront.vercel.app"],
+  methods: ["GET", "POST", "PUT", "OPTIONS"], // Include OPTIONS for preflight requests
+  credentials: true, // This allows cookies to be included in the requests
 }));
 
 // MongoDB connection
@@ -89,7 +90,7 @@ app.post('/register', async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
-      return res.redirect('/login'); // Redirect if user exists
+      return res.status(400).json({ message: 'User already exists' });
     }
     user = await User.create({ username, email, password });
     const token = generateToken(user._id);
@@ -106,11 +107,11 @@ app.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user || !(await user.matchPassword(password))) {
-      return res.redirect('/register'); // Redirect if user not found or incorrect password
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
     const token = generateToken(user._id);
     res.cookie('token', token, { httpOnly: true });
-    return res.redirect('/');
+    return res.status(200).json({ message: 'Login successful' });
   } catch (error) {
     return res.status(500).json({ error: 'Server error' });
   }
