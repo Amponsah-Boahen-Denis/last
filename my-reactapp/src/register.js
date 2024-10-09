@@ -8,7 +8,6 @@ const Register = () => {
     email: '',
     password: '',
   });
-
   const { username, email, password } = formData;
 
   const handleChange = (e) => {
