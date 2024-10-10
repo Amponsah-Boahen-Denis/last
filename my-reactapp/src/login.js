@@ -15,28 +15,49 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('https://lastback.vercel.app/login', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true, // Ensure cookies are included in the request
-      });
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post('https://lastback.vercel.app/login', formData, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       withCredentials: true, // Ensure cookies are included in the request
+  //     });
 
-      if (response.status === 200) {
-        // No need to manually store the token; the backend should handle cookies
-        alert('Login successful!');
-        navigate('/'); // Redirect on successful login
-      } else {
-        alert(response.data.message || 'Login failed');
-      }
+  //     if (response.status === 200) {
+  //       // No need to manually store the token; the backend should handle cookies
+  //       alert('Login successful!');
+  //       navigate('/'); // Redirect on successful login
+  //     } else {
+  //       alert(response.data.message || 'Login failed');
+  //     }
+  //   } catch (error) {
+  //     console.error('Login Error:', error);
+  //     alert('An unexpected error occurred. Please try again later.');
+  //   }
+  // };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+
+    try {
+        const { status } = await axios.post('https://lastback.vercel.app/login', formData, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+        });
+
+        if (status === 200) {
+            alert('Login successful!'); // Notify user of success
+            navigate('/'); // Redirect to homepage on successful login
+        }
     } catch (error) {
-      console.error('Login Error:', error);
-      alert('An unexpected error occurred. Please try again later.');
+        console.error('Login Error:', error);
+        alert('Login failed. Please check your credentials and try again.'); // Generic error message
     }
-  };
+};
+
 
   const handleRegisterRedirect = (e) => {
     e.preventDefault();
