@@ -49,7 +49,7 @@ const Login = () => {
         });
 
         // Check if the response contains a success message
-        if (response.data && response.data.message === 'Login successful') {
+        if (response) {
             alert('Login successful!'); // Notify user of success
             navigate('/'); // Redirect to homepage on successful login
         } else {
