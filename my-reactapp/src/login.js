@@ -22,27 +22,44 @@ const Login = () => {
     const userCredentials = { email, password };
 
     try {
-      const response = await axios({
-        method: 'POST',
-        url: 'https://lastback.vercel.app/login',
-        headers: { 'Content-Type': 'application/json' },
-        data: userCredentials,
-      });
+  const response = await axios.post('https://lastback.vercel.app/login', userCredentials);
 
-      if (response.status === 200) {
-        // Storing token with added attributes for security
-        document.cookie = `token=${response.data.token}; path=/; secure; SameSite=Strict`;
-        alert('Login successful!');
-        navigate('/');  // Redirect after successful login
-      } else {
-        // If there's an error, alert user
-        alert(response.data.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Login Error:', error);
-      alert('An error occurred. Please try again later.');
-    }
-  };
+  if (response.status === 200) {
+    // Set the token as a cookie with secure attributes
+    document.cookie = `token=${response.data.token}; path=/; secure; SameSite=Strict`;
+    alert('Login successful!');
+    navigate('/');  // Redirect on success
+  } else {
+    alert(response.data.message || 'Login failed');
+  }
+} catch (error) {
+  console.error('Login Error:', error);
+  alert('An error occurred. Please try again later.');
+}
+
+
+  //   try {
+  //     const response = await axios({
+  //       method: 'POST',
+  //       url: 'https://lastback.vercel.app/login',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       data: userCredentials,
+  //     });
+
+  //     if (response.status === 200) {
+  //       // Storing token with added attributes for security
+  //       document.cookie = `token=${response.data.token}; path=/; secure; SameSite=Strict`;
+  //       alert('Login successful!');
+  //       navigate('/');  // Redirect after successful login
+  //     } else {
+  //       // If there's an error, alert user
+  //       alert(response.data.message || 'Login failed');
+  //     }
+  //   } catch (error) {
+  //     console.error('Login Error:', error);
+  //     alert('An error occurred. Please try again later.');
+  //   }
+  // };
 
   // Handle registration redirect in a more concise manner
   const handleRegisterRedirect = (e) => {
