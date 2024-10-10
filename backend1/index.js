@@ -103,6 +103,11 @@ const protect = async (req, res, next) => {
 //   }
 // });
 
+
+
+
+
+
 app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -116,6 +121,7 @@ app.post('/register', async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists.' });
+      
     }
 
     // Create new user and set token
@@ -152,28 +158,33 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
-  // Validate request data quickly
+  // Validate request data
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required.' });
+    return res.status(400).json({ message: 'All fields are required.' });
   }
 
   try {
-    // Use a single query to find the user and validate password
+    // Check for existing user
     const user = await User.findOne({ email });
+
+    // If user does not exist or password doesn't match
     if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
+      return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
-    // Generate and set token in one step
+    // Generate and set token in the response cookie
     const token = generateToken(user._id);
     res.cookie('token', token, { httpOnly: true });
-    
+
+    // Return successful login message
     return res.status(200).json({ message: 'Login successful.' });
+
   } catch (error) {
     console.error(error); // Log the error for debugging
-    return res.status(500).json({ message: 'An error occurred, please try again.' });
+    return res.status(500).json({ message: 'Server error, please try again later.' });
   }
 });
+
 
 
 // Logout
