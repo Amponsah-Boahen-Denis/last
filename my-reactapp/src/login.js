@@ -22,7 +22,9 @@ const Login = () => {
       const response = await axios.post('https://lastback.vercel.app/login', formData, {
         headers: {
           'Content-Type': 'application/json', // Set the content type of the request
+          'Accept': 'application/json', // Ensure that the response is in JSON format
         },
+        withCredentials: true, // Allow cookies to be sent with the request
       });
 
       if (response.status === 200) {
@@ -64,8 +66,8 @@ const Login = () => {
           required // Password field is required
           style={styles.input}
         />
-        <button type="submit" style={styles.button}>Login</button> // Submit button for login
-        <button onClick={handleRegisterRedirect} style={styles.button}>Register</button> // Button to navigate to registration
+        <button type="submit" style={styles.button}>Login</button> {/* Submit button for login */}
+        <button onClick={handleRegisterRedirect} style={styles.button}>Register</button> {/* Button to navigate to registration */}
       </form>
     </div>
   );
@@ -109,7 +111,6 @@ const styles = {
 };
 
 export default Login;
-
 
 
 // import React, { useState } from 'react';
