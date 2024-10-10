@@ -155,6 +155,36 @@ app.post('/register', async (req, res) => {
 //   }
 // });
 
+// app.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
+
+//   // Validate request data
+//   if (!email || !password) {
+//     return res.status(400).json({ message: 'All fields are required.' });
+//   }
+
+//   try {
+//     // Check for existing user
+//     const user = await User.findOne({ email });
+
+//     // If user does not exist or password doesn't match
+//     if (!user || !(await user.matchPassword(password))) {
+//       return res.status(401).json({ message: 'Invalid email or password.' });
+//     }
+
+//     // Generate and set token in the response cookie
+//     const token = generateToken(user._id);
+//     res.cookie('token', token, { httpOnly: true });
+
+//     // Return successful login message
+//     return res.status(200).json({ message: 'Login successful.' });
+
+//   } catch (error) {
+//     console.error(error); // Log the error for debugging
+//     return res.status(500).json({ message: 'Server error, please try again later.' });
+//   }
+// });
+
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -167,24 +197,19 @@ app.post('/login', async (req, res) => {
     // Check for existing user
     const user = await User.findOne({ email });
 
-    // If user does not exist or password doesn't match
+    // Check if email exists and password matches
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
-
-    // Generate and set token in the response cookie
-    const token = generateToken(user._id);
-    res.cookie('token', token, { httpOnly: true });
 
     // Return successful login message
     return res.status(200).json({ message: 'Login successful.' });
 
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error);
     return res.status(500).json({ message: 'Server error, please try again later.' });
   }
 });
-
 
 
 // Logout
