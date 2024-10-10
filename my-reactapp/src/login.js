@@ -43,20 +43,24 @@ const Login = () => {
     e.preventDefault(); // Prevent default form submission
 
     try {
-        const { status } = await axios.post('https://lastback.vercel.app/login', formData, {
+        const response = await axios.post('https://lastback.vercel.app/login', formData, {
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true,
         });
 
-        if (status === 200) {
+        // Check if the response contains a success message
+        if (response.data && response.data.message === 'Login successful') {
             alert('Login successful!'); // Notify user of success
             navigate('/'); // Redirect to homepage on successful login
+        } else {
+            alert('Login failed. Please check your credentials and try again.'); // Generic error message
         }
     } catch (error) {
         console.error('Login Error:', error);
         alert('Login failed. Please check your credentials and try again.'); // Generic error message
     }
 };
+
 
 
   const handleRegisterRedirect = (e) => {
