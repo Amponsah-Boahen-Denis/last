@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 
 dotenv.config();
 const app = express();
-const tok = "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"; // Commented out the secret token
+// const tok = "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"; // Commented out the secret token
 
 // Middleware setup
 app.use(express.json());
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 // CORS configuration
 app.use(cors({
-  origin: ["https://lastfront.vercel.app"],
+  origin: true, // Allow requests from any origin
   methods: ["GET", "POST", "PUT", "OPTIONS"], // Include OPTIONS for preflight requests
   credentials: true, // This allows cookies to be included in the requests
 }));
@@ -124,13 +124,11 @@ app.post('/login', async (req, res) => {
 // });
 
 // Root route (commented out protection middleware)
-// app.get('/', protect, (req, res) => {
 app.get('/', (req, res) => {
   res.send('Welcome to the backend server');
 });
 
 // GET all accounts (commented out protection middleware)
-// app.get('/account', protect, async (req, res) => {
 app.get('/account', async (req, res) => {
   try {
     const accounts = await Account.find();
@@ -141,7 +139,6 @@ app.get('/account', async (req, res) => {
 });
 
 // PUT update an account by ID (commented out protection middleware)
-// app.put('/account/:id', protect, async (req, res) => {
 app.put('/account/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -154,7 +151,6 @@ app.put('/account/:id', async (req, res) => {
 });
 
 // POST create a new account (commented out protection middleware)
-// app.post('/account', protect, async (req, res) => {
 app.post('/account', async (req, res) => {
   try {
     const { Description, Username, Password, URL, Notes } = req.body;
@@ -169,8 +165,6 @@ app.post('/account', async (req, res) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
 
 // const express = require('express');
 // const mongoose = require('mongoose');
