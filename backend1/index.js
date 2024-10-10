@@ -137,6 +137,29 @@ app.post('/register', async (req, res) => {
 });
 
 
+app.post('/login', async (req, res) => {
+  const {  email, password } = req.body;
+
+  // Validate request data quickly
+
+
+  try {
+    // Check for existing user in one step
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(200).json({ message: 'Login Successful' });
+      
+    }
+
+    // Create new user and set token
+    
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ message: 'An error occurred, please try again.' });
+  }
+});
+
+
 
 // Login
 // app.post('/login', async (req, res) => {
@@ -184,31 +207,31 @@ app.post('/register', async (req, res) => {
 //   }
 // });
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+// app.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
 
-  // Validate request data
-  if (!email || !password) {
-    return res.status(400).json({ message: 'All fields are required.' });
-  }
+//   // Validate request data
+//   if (!email || !password) {
+//     return res.status(400).json({ message: 'All fields are required.' });
+//   }
 
-  try {
-    // Check for existing user
-    const user = await User.findOne({ email });
+//   try {
+//     // Check for existing user
+//     const user = await User.findOne({ email });
 
-    // Check if email exists and password matches
-    if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ message: 'Invalid email or password.' });
-    }
+//     // Check if email exists and password matches
+//     if (!user || !(await user.matchPassword(password))) {
+//       return res.status(401).json({ message: 'Invalid email or password.' });
+//     }
 
-    // Return successful login message
-    return res.status(200).json({ message: 'Login successful.' });
+//     // Return successful login message
+//     return res.status(200).json({ message: 'Login successful.' });
 
-  } catch (error) {
-    console.error(error);
-    return console.log('sever fail')
-  }
-});
+//   } catch (error) {
+//     console.error(error);
+//     return console.log('sever fail')
+//   }
+// });
 
 
 // Logout
