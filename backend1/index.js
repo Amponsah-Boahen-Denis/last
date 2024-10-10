@@ -1,51 +1,51 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken'); // Commented out
-const cookieParser = require('cookie-parser');
+// const express = require('express');
+// const mongoose = require('mongoose');
+// const cors = require('cors');
+// const bodyParser = require('body-parser');
+// const dotenv = require('dotenv');
+// const bcrypt = require('bcryptjs');
+// // const jwt = require('jsonwebtoken'); // Commented out
+// const cookieParser = require('cookie-parser');
 
-dotenv.config();
-const app = express();
-// const tok = "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"; // Commented out the secret token
+// dotenv.config();
+// const app = express();
+// // const tok = "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"; // Commented out the secret token
 
-// Middleware setup
-app.use(express.json());
-app.use(cookieParser());
-app.use(bodyParser.json());
+// // Middleware setup
+// app.use(express.json());
+// app.use(cookieParser());
+// app.use(bodyParser.json());
 
-// CORS configuration
-app.use(cors({
-  origin: 'https://lastfront.vercel.app', // Allow requests from any origin
-  methods: ["GET", "POST", "PUT", "OPTIONS"], // Include OPTIONS for preflight requests
-  credentials: true, // This allows cookies to be included in the requests
-}));
+// // CORS configuration
+// app.use(cors({
+//   origin: 'https://lastfront.vercel.app', // Allow requests from any origin
+//   methods: ["GET", "POST", "PUT", "OPTIONS"], // Include OPTIONS for preflight requests
+//   credentials: true, // This allows cookies to be included in the requests
+// }));
 
-// MongoDB connection
-mongoose.connect('mongodb+srv://Denis:decimal@cluster0.yzgehjl.mongodb.net/password?retryWrites=true&w=majority&appName=Cluster0', 
-  { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// // MongoDB connection
+// mongoose.connect('mongodb+srv://Denis:decimal@cluster0.yzgehjl.mongodb.net/password?retryWrites=true&w=majority&appName=Cluster0', 
+//   { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(() => console.log('MongoDB connected'))
+//   .catch(err => console.error('MongoDB connection error:', err));
 
-// User schema & model
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
+// // User schema & model
+// const userSchema = new mongoose.Schema({
+//   username: { type: String, required: true, unique: true },
+//   email: { type: String, required: true, unique: true },
+//   password: { type: String, required: true },
+// });
 
-const User = mongoose.model('User', userSchema);
+// const User = mongoose.model('User', userSchema);
 
-// Account schema & model
-const accountSchema = new mongoose.Schema({
-  Description: String,
-  Username: String,
-  Password: String,
-  URL: String,
-  Notes: String,
-});
+// // Account schema & model
+// const accountSchema = new mongoose.Schema({
+//   Description: String,
+//   Username: String,
+//   Password: String,
+//   URL: String,
+//   Notes: String,
+// });
 
 // const Account = mongoose.model('Account', accountSchema);
 
