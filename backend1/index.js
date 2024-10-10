@@ -138,7 +138,6 @@ app.post('/register', async (req, res) => {
 
 
 
-
 // Login
 // app.post('/login', async (req, res) => {
 //   const { email, password } = req.body;
@@ -207,7 +206,7 @@ app.post('/login', async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Server error, please try again later.' });
+    return console.log('sever fail')
   }
 });
 
