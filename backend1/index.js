@@ -148,15 +148,14 @@ app.post('/login', async (req, res) => {
   try {
     // Check for existing user by email
     const existingUser = await User.findOne({ email });
-    
+
     // If user does not exist, return an error
     if (!existingUser) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
-    // Check if password matches (assuming matchPassword is a method on the User model)
-    const isPasswordMatch = await existingUser.matchPassword(password);
-    if (!isPasswordMatch) {
+    // Check if the password matches (directly compare the password if it's not hashed)
+    if (existingUser.password !== password) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
@@ -168,7 +167,6 @@ app.post('/login', async (req, res) => {
     return res.status(500).json({ message: 'An error occurred, please try again.' });
   }
 });
-
 
 
 
