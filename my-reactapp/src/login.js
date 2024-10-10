@@ -21,11 +21,11 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        withCredentials: true, // Ensure cookies are included in the request
       });
 
       if (response.status === 200) {
-        // Store the token securely in a cookie
-        document.cookie = `token=${response.data.token}; path=/; secure; SameSite=Strict`;
+        // No need to manually store the token; the backend should handle cookies
         alert('Login successful!');
         navigate('/'); // Redirect on successful login
       } else {
