@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 // CORS configuration
 app.use(cors({
-  origin: true, // Allow requests from any origin
+  origin: 'https://lastfront.vercel.app', // Allow requests from any origin
   methods: ["GET", "POST", "PUT", "OPTIONS"], // Include OPTIONS for preflight requests
   credentials: true, // This allows cookies to be included in the requests
 }));
