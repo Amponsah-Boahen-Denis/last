@@ -38,9 +38,6 @@ const Login = () => {
 
 
  
-  // };
-
-  // Handle registration redirect in a more concise manner
   const handleRegisterRedirect = (e) => {
     e.preventDefault();
     navigate('/register'); // Navigate to the register page
