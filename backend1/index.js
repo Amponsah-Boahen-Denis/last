@@ -102,21 +102,45 @@ app.post('/register', async (req, res) => {
 });
 
 
-
+// Login route
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
+
   try {
-    // Find user by email
     const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ message: "Invalid email or password. Please register if you don't have an account." });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
     }
-    return res.status(200).json({ message: 'Login successful', user });
+
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // Successful login logic here (e.g., generating tokens)
+    res.status(200).json({ message: 'Login successful', user });
   } catch (error) {
     console.error('Login error:', error); // Log the error for debugging
-    return res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', details: error.message });
   }
 });
+
+
+
+// app.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     // Find user by email
+//     const user = await User.findOne({ email });
+//     if (!user || !(await user.matchPassword(password))) {
+//       return res.status(401).json({ message: "Invalid email or password. Please register if you don't have an account." });
+//     }
+//     return res.status(200).json({ message: 'Login successful', user });
+//   } catch (error) {
+//     console.error('Login error:', error); // Log the error for debugging
+//     return res.status(500).json({ error: 'Server error' });
+//   }
+// });
 
 
 // Login
