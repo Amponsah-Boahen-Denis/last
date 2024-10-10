@@ -87,37 +87,94 @@ const protect = async (req, res, next) => {
 // Routes
 
 // Register
+// app.post('/register', async (req, res) => {
+//   const { username, email, password } = req.body;
+//   try {
+//     let user = await User.findOne({ email });
+//     if (user) {
+//       return res.status(400).json({ message: "User already exists, please log in." });
+//     }
+//     user = await User.create({ username, email, password });
+//     const token = generateToken(user._id);
+//     res.cookie('token', token, { httpOnly: true });
+//     return res.status(201).json({ message: 'Registered successfully', user });
+//   } catch (error) {
+//     return res.status(500).json({ error: 'Server error' });
+//   }
+// });
+
 app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
+
+  // Validate request data quickly
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
+
   try {
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: "User already exists, please log in." });
+    // Check for existing user in one step
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists.' });
     }
-    user = await User.create({ username, email, password });
-    const token = generateToken(user._id);
+
+    // Create new user and set token
+    const newUser = await User.create({ username, email, password });
+    const token = generateToken(newUser._id);
     res.cookie('token', token, { httpOnly: true });
-    return res.status(201).json({ message: 'Registered successfully', user });
+
+    return res.status(201).json({ message: 'Registration successful.' });
   } catch (error) {
-    return res.status(500).json({ error: 'Server error' });
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ message: 'An error occurred, please try again.' });
   }
 });
 
+
+
+
 // Login
+// app.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user || !(await user.matchPassword(password))) {
+//       return res.status(401).json({ message: "Invalid email or password. Please register if you don't have an account." });
+//     }
+//     const token = generateToken(user._id);
+//     res.cookie('token', token, { httpOnly: true });
+//     return res.status(200).json({ message: 'Login successful', user });
+//   } catch (error) {
+//     return res.status(500).json({ error: 'Server error' });
+//   }
+// });
+
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
+
+  // Validate request data quickly
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required.' });
+  }
+
   try {
+    // Use a single query to find the user and validate password
     const user = await User.findOne({ email });
     if (!user || !(await user.matchPassword(password))) {
-      return res.status(401).json({ message: "Invalid email or password. Please register if you don't have an account." });
+      return res.status(401).json({ message: 'Invalid credentials.' });
     }
+
+    // Generate and set token in one step
     const token = generateToken(user._id);
     res.cookie('token', token, { httpOnly: true });
-    return res.status(200).json({ message: 'Login successful', user });
+    
+    return res.status(200).json({ message: 'Login successful.' });
   } catch (error) {
-    return res.status(500).json({ error: 'Server error' });
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ message: 'An error occurred, please try again.' });
   }
 });
+
 
 // Logout
 app.get('/logout', protect, (req, res) => {
