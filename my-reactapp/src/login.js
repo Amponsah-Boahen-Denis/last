@@ -37,27 +37,7 @@ const Login = () => {
 }
 
 
-  //   try {
-  //     const response = await axios({
-  //       method: 'POST',
-  //       url: 'https://lastback.vercel.app/login',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       data: userCredentials,
-  //     });
-
-  //     if (response.status === 200) {
-  //       // Storing token with added attributes for security
-  //       document.cookie = `token=${response.data.token}; path=/; secure; SameSite=Strict`;
-  //       alert('Login successful!');
-  //       navigate('/');  // Redirect after successful login
-  //     } else {
-  //       // If there's an error, alert user
-  //       alert(response.data.message || 'Login failed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Login Error:', error);
-  //     alert('An error occurred. Please try again later.');
-  //   }
+ 
   // };
 
   // Handle registration redirect in a more concise manner
