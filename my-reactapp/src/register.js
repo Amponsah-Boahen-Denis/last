@@ -17,28 +17,55 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-    try {
-      // Perform a POST request to the registration endpoint
-      const response = await axios.post('https://lastback.vercel.app/register', formData, {
-        headers: {
-          'Content-Type': 'application/json', // Set the content type of the request
-          'Accept': 'application/json', // Ensure that the response is in JSON format
-        },
-        withCredentials: true, // Allow cookies to be sent with the request
-      });
+  e.preventDefault(); // Prevent the default form submission
+  try {
+    // Perform a POST request to the registration endpoint
+    const response = await axios.post('https://lastback.vercel.app/register', formData, {
+      headers: {
+        'Content-Type': 'application/json', // Set the content type of the request
+        'Accept': 'application/json', // Ensure that the response is in JSON format
+      },
+      withCredentials: true, // Allow cookies to be sent with the request
+    });
 
-      if (response.status === 200) {
-        alert('Registration successful! Redirecting to login...'); // Notify user of successful registration
-        navigate('/login'); // Redirect to login after successful registration
-      } else {
-        alert(response.data.message || 'Registration failed'); // Notify if registration failed with specific message
-      }
-    } catch (error) {
-      console.error('Error:', error); // Log any errors that occur during registration
-      alert('An unexpected error occurred. Please try again later.'); // Notify user of error
+    console.log('Registration Response:', response); // Log the server response
+
+    // Check if registration was successful
+    if (response.status === 200) {
+      alert('Registration successful! Redirecting to login...'); // Notify user of successful registration
+      navigate('/login'); // Redirect to login after successful registration
+    } else {
+      alert(response.data.message || 'Registration failed'); // Notify if registration failed with specific message
     }
-  };
+  } catch (error) {
+    console.error('Error:', error); // Log any errors that occur during registration
+    alert('An unexpected error occurred. Please try again later.'); // Notify user of error
+  }
+};
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault(); // Prevent the default form submission
+  //   try {
+  //     // Perform a POST request to the registration endpoint
+  //     const response = await axios.post('https://lastback.vercel.app/register', formData, {
+  //       headers: {
+  //         'Content-Type': 'application/json', // Set the content type of the request
+  //         'Accept': 'application/json', // Ensure that the response is in JSON format
+  //       },
+  //       withCredentials: true, // Allow cookies to be sent with the request
+  //     });
+
+  //     if (response.status === 200) {
+  //       alert('Registration successful! Redirecting to login...'); // Notify user of successful registration
+  //       navigate('/login'); // Redirect to login after successful registration
+  //     } else {
+  //       alert(response.data.message || 'Registration failed'); // Notify if registration failed with specific message
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error); // Log any errors that occur during registration
+  //     alert('An unexpected error occurred. Please try again later.'); // Notify user of error
+  //   }
+  // };
 
   return (
     <div style={styles.container}>
