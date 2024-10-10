@@ -51,7 +51,7 @@ const Login = () => {
         // Check if the response contains a success message
         if (response) {
             alert('Login successful!'); // Notify user of success
-          return  navigate('/'); // Redirect to homepage on successful login
+          return  navigate('/edit'); // Redirect to homepage on successful login
         } else {
             alert('Login failed. Please check your credentials and try again.'); // Generic error message
         }
