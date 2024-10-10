@@ -138,26 +138,37 @@ app.post('/register', async (req, res) => {
 
 
 app.post('/login', async (req, res) => {
-  const {  email, password } = req.body;
+  const { email, password } = req.body;
 
   // Validate request data quickly
-
+  if (!email || !password) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
 
   try {
-    // Check for existing user in one step
+    // Check for existing user by email
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(200).json({ message: 'Login Successful' });
-      
+    
+    // If user does not exist, return an error
+    if (!existingUser) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
-    // Create new user and set token
-    
+    // Check if password matches (assuming matchPassword is a method on the User model)
+    const isPasswordMatch = await existingUser.matchPassword(password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // If both email and password are correct, return success message
+    return res.status(200).json({ message: 'Login successful.' });
+
   } catch (error) {
     console.error(error); // Log the error for debugging
     return res.status(500).json({ message: 'An error occurred, please try again.' });
   }
 });
+
 
 
 
