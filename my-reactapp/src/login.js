@@ -16,42 +16,26 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
-    try {
-      // Perform a POST request to the login endpoint
-      const response = await axios.post('https://lastback.vercel.app/login', formData, {
-        headers: {
-          'Content-Type': 'application/json', // Set the content type of the request
-          'Accept': 'application/json', // Ensure that the response is in JSON format
-        },
-        withCredentials: true, // Allow cookies to be sent with the request
-        timeout: 10000, // Set a timeout of 10 seconds
-      });
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault(); // Prevent the default form submission
+  //     await axios.post('https://lastback.vercel.app/login', formData);
+  //   .then(result => {
+  //   console.log(result)
+  //   navigate("/edit")
+  //   }).catch(err=>console.log(err)) 
+  // };
 
-      if (response.status === 200) {
-        alert('Login successful!'); // Notify the user of successful login
-        navigate('/'); // Redirect to the home page on successful login
-      } else {
-        alert(response.data.message || 'Login failed'); // Notify if login failed with specific message
-      }
-    } catch (error) {
-      console.error('Login Error:', error); // Log any errors that occur during login
-      if (error.response) {
-        // The request was made, but the server responded with a status code outside of the 2xx range
-        console.error('Response data:', error.response.data);
-        alert(error.response.data.message || 'An error occurred. Please try again later.');
-      } else if (error.request) {
-        // The request was made, but no response was received
-        console.error('Request data:', error.request);
-        alert('No response from the server. Please check your internet connection and try again.');
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error message:', error.message);
-        alert('An unexpected error occurred. Please try again later.');
-      }
-    }
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault(); // Prevent the default form submission
+  try {
+    const result = await axios.post('https://lastback.vercel.app/login', formData);
+    console.log(result); // Log the result of the login request
+    navigate("/edit"); // Navigate to the edit page on successful login
+  } catch (err) {
+    console.log(err); // Log any errors that occur during login
+    alert('Login failed: ' + (err.response?.data?.message || 'An error occurred'));
+  }
+};
 
   const handleRegisterRedirect = (e) => {
     e.preventDefault(); // Prevent default action of button
