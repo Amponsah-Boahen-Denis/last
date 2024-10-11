@@ -39,28 +39,51 @@ const Login = () => {
   // };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+//   const handleSubmit = async (e) => {
+//     e.preventDefault(); // Prevent default form submission
 
-    try {
-        const response = await axios.post('https://lastback.vercel.app/login', formData, {
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true,
-        });
+//     try {
+//         const response = await axios.post('https://lastback.vercel.app/login', formData, {
+//             headers: { 'Content-Type': 'application/json' },
+//             withCredentials: true,
+//         });
 
-        // Check if the response contains a success message
-        if (response) {
-            alert('Login successful!'); // Notify user of success
-          return  navigate('/edit'); // Redirect to homepage on successful login
-        } else {
-            alert('Login failed. Please check your credentials OR register.'); // Generic error message
-        }
-    } catch (error) {
-        console.error('Login Error:', error);
-        alert('Login failed. Please check your credentials or register.'); // Generic error message
+//         // Check if the response contains a success message
+//         if (response) {
+//             alert('Login successful!'); // Notify user of success
+//           return  navigate('/edit'); // Redirect to homepage on successful login
+//         } else {
+//             alert('Login failed. Please check your credentials OR register.'); // Generic error message
+//         }
+//     } catch (error) {
+//         console.error('Login Error:', error);
+//         alert('Login failed. Please check your credentials or register.'); // Generic error message
+//     }
+// };
+
+const handleSubmit = async (e) => {
+  e.preventDefault(); // Prevent default form submission
+
+  try {
+    const response = await axios.post('https://lastback.vercel.app/login', formData, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true, // Ensure cookies are included in the request if the backend uses cookies for sessions
+    });
+
+    // Check if the response contains a token or success message
+    if (response.status === 200 && response.data.token) {
+      // Store the token in localStorage
+      localStorage.setItem('token', response.data.token);
+      alert('Login successful!'); // Notify user of success
+      navigate('/edit'); // Redirect to the edit page on successful login
+    } else {
+      alert('Login failed. Please check your credentials or register.'); // Generic error message
     }
+  } catch (error) {
+    console.error('Login Error:', error);
+    alert('Login failed. Please check your credentials or try again later.'); // Generic error message
+  }
 };
-
 
 
   const handleRegisterRedirect = (e) => {
