@@ -51,18 +51,18 @@ const accountSchema = new mongoose.Schema({
 
 const Account = mongoose.model('Account', accountSchema);
 
-// Password hashing middleware
-// userSchema.pre('save', async function (next) {
-//   if (!this.isModified('password')) return next();
-//   const salt = await bcrypt.genSalt(10);
-//   this.password = await bcrypt.hash(this.password, salt);
-//   next();
-// });
+//Password hashing middleware
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
-// // Method to check password match
-// userSchema.methods.matchPassword = async function (enteredPassword) {
-//   return await bcrypt.compare(enteredPassword, this.password);
-// };
+// Method to check password match
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 // JWT token generation function
 const generateToken = (id) => {
@@ -137,36 +137,36 @@ app.post('/register', async (req, res) => {
 });
 
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+// app.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
 
-  // Validate request data quickly
-  if (!email || !password) {
-    return res.status(400).json({ message: 'All fields are required.' });
-  }
+//   // Validate request data quickly
+//   if (!email || !password) {
+//     return res.status(400).json({ message: 'All fields are required.' });
+//   }
 
-  try {
-    // Check for existing user by email
-    const existingUser = await User.findOne({ email });
+//   try {
+//     // Check for existing user by email
+//     const existingUser = await User.findOne({ email });
 
-    // If user does not exist, return an error
-    if (!existingUser) {
-      return res.status(401).json({ message: 'Invalid email or password.' });
-    }
+//     // If user does not exist, return an error
+//     if (!existingUser) {
+//       return res.status(401).json({ message: 'Invalid email or password.' });
+//     }
 
-    // Check if the password matches (directly compare the password if it's not hashed)
-    if (existingUser.password !== password) {
-      return res.status(401).json({ message: 'Invalid email or password.' });
-    }
+//     // Check if the password matches (directly compare the password if it's not hashed)
+//     if (existingUser.password !== password) {
+//       return res.status(401).json({ message: 'Invalid email or password.' });
+//     }
 
-    // If both email and password are correct, return success message
-    return res.status(200).json({ message: 'Login successful.' });
+//     // If both email and password are correct, return success message
+//     return res.status(200).json({ message: 'Login successful.' });
 
-  } catch (error) {
-    console.error(error); // Log the error for debugging
-    return res.status(500).json({ message: 'An error occurred, please try again.' });
-  }
-});
+//   } catch (error) {
+//     console.error(error); // Log the error for debugging
+//     return res.status(500).json({ message: 'An error occurred, please try again.' });
+//   }
+// });
 
 
 
@@ -186,35 +186,41 @@ app.post('/login', async (req, res) => {
 //   }
 // });
 
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
 
-//   // Validate request data
-//   if (!email || !password) {
-//     return res.status(400).json({ message: 'All fields are required.' });
-//   }
+  // Validate request data
+  if (!email || !password) {
+    return res.status(400).json({ message: 'All fields are required.' });
+  }
 
-//   try {
-//     // Check for existing user
-//     const user = await User.findOne({ email });
+  try {
+    // Check for existing user by email
+    const user = await User.findOne({ email });
 
-//     // If user does not exist or password doesn't match
-//     if (!user || !(await user.matchPassword(password))) {
-//       return res.status(401).json({ message: 'Invalid email or password.' });
-//     }
+    // If user does not exist
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
 
-//     // Generate and set token in the response cookie
-//     const token = generateToken(user._id);
-//     res.cookie('token', token, { httpOnly: true });
+    // Check if the password matches (without using matchPassword)
+    if (user.password !== password) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
 
-//     // Return successful login message
-//     return res.status(200).json({ message: 'Login successful.' });
+    // Generate and set token in the response cookie
+    const token = generateToken(user._id);
+    res.cookie('token', token, { httpOnly: true });
 
-//   } catch (error) {
-//     console.error(error); // Log the error for debugging
-//     return res.status(500).json({ message: 'Server error, please try again later.' });
-//   }
-// });
+    // Return successful login message
+    return res.status(200).json({ message: 'Login successful.' });
+
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ message: 'Server error, please try again later.' });
+  }
+});
+
 
 // app.post('/login', async (req, res) => {
 //   const { email, password } = req.body;
@@ -255,7 +261,7 @@ app.get('/',  (req, res) => {
 });
 
 // GET all accounts
-app.get('/account',  async (req, res) => {
+app.get('/account', protect,  async (req, res) => {
   try {
     const accounts = await Account.find();
     res.json(accounts);
@@ -265,7 +271,7 @@ app.get('/account',  async (req, res) => {
 });
 
 // PUT update an account by ID
-app.put('/account/:id',  async (req, res) => {
+app.put('/account/:id', protect, async (req, res) => {
   try {
     const { id } = req.params;
     const update = req.body;
@@ -277,7 +283,7 @@ app.put('/account/:id',  async (req, res) => {
 });
 
 // POST create a new account
-app.post('/account',  async (req, res) => {
+app.post('/account', protect,  async (req, res) => {
   try {
     const { Description, Username, Password, URL, Notes } = req.body;
     const newAccount = new Account({ Description, Username, Password, URL, Notes });
