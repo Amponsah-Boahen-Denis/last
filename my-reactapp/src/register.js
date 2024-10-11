@@ -30,11 +30,11 @@ const Register = () => {
         alert('Registration successful! Redirecting to login...');
       return  navigate('/'); // Redirect to login after successful registration
       } else {
-        alert(response.data.message || 'Registration failed');
+        alert(response.data.message || 'Registration failed or account already exist!');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An unexpected error occurred. Please try again later.');
+      alert('Registration failed or account already exist!');
     }
   };
 
