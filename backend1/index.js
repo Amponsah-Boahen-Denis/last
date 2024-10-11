@@ -65,6 +65,26 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 // JWT token generation function
+// const generateToken = (id) => {
+//   return jwt.sign({ id }, tok, { expiresIn: '10d' });
+// };
+
+// // Middleware to protect routes
+// const protect = async (req, res, next) => {
+//   const token = req.cookies.token;
+//   if (!token) {
+//     return res.status(401).json({ message: 'No token, not authorized' });
+//   }
+//   try {
+//     const decoded = jwt.verify(token, tok);
+//     req.user = await User.findById(decoded.id).select('-password');
+//     next();
+//   } catch (error) {
+//     return res.status(401).json({ message: 'Not authorized' });
+//   }
+// };
+
+
 const generateToken = (id) => {
   return jwt.sign({ id }, tok, { expiresIn: '10d' });
 };
@@ -78,11 +98,14 @@ const protect = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, tok);
     req.user = await User.findById(decoded.id).select('-password');
-    next();
+    next(); // Proceed to the next middleware or route handler
   } catch (error) {
     return res.status(401).json({ message: 'Not authorized' });
   }
 };
+
+
+
 
 // Routes
 
@@ -261,7 +284,7 @@ app.get('/',  (req, res) => {
 });
 
 // GET all accounts
-app.get('/account',   async (req, res) => {
+app.get('/account', protect,  async (req, res) => {
   try {
     const accounts = await Account.find();
     res.json(accounts);
