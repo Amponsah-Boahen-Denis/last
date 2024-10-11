@@ -53,11 +53,11 @@ const Login = () => {
             alert('Login successful!'); // Notify user of success
           return  navigate('/edit'); // Redirect to homepage on successful login
         } else {
-            alert('Login failed. Please check your credentials and try again.'); // Generic error message
+            alert('Login failed. Please check your credentials OR register.'); // Generic error message
         }
     } catch (error) {
         console.error('Login Error:', error);
-        alert('Login failed. Please check your credentials and try again.'); // Generic error message
+        alert('Login failed. Please check your credentials or register.'); // Generic error message
     }
 };
 
