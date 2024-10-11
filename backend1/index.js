@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -51,7 +49,7 @@ const accountSchema = new mongoose.Schema({
 
 const Account = mongoose.model('Account', accountSchema);
 
-//Password hashing middleware
+// Password hashing middleware
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
@@ -84,53 +82,9 @@ const protect = async (req, res, next) => {
   }
 };
 
-
-// const generateToken = (id) => {
-//   return jwt.sign({ id }, tok, { expiresIn: '10d' });
-// };
-
-// // Middleware to protect routes
-// const protect = async (req, res, next) => {
-//   const token = req.cookies.token;
-//   if (!token) {
-//     return res.status(401).json({ message: 'No token, not authorized' });
-//   }
-//   try {
-//     const decoded = jwt.verify(token, tok);
-//     req.user = await User.findById(decoded.id).select('-password');
-//     next(); // Proceed to the next middleware or route handler
-//   } catch (error) {
-//     return res.status(401).json({ message: 'Not authorized' });
-//   }
-// };
-
-
-
-
 // Routes
 
 // Register
-// app.post('/register', async (req, res) => {
-//   const { username, email, password } = req.body;
-//   try {
-//     let user = await User.findOne({ email });
-//     if (user) {
-//       return res.status(400).json({ message: "User already exists, please log in." });
-//     }
-//     user = await User.create({ username, email, password });
-//     const token = generateToken(user._id);
-//     res.cookie('token', token, { httpOnly: true });
-//     return res.status(201).json({ message: 'Registered successfully', user });
-//   } catch (error) {
-//     return res.status(500).json({ error: 'Server error' });
-//   }
-// });
-
-
-
-
-
-
 app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -144,13 +98,12 @@ app.post('/register', async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists.' });
-      
     }
 
     // Create new user and set token
     const newUser = await User.create({ username, email, password });
     const token = generateToken(newUser._id);
-    res.cookie('token', token, { httpOnly: true });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' }); // Use secure cookie in production
 
     return res.status(201).json({ message: 'Registration successful.' });
   } catch (error) {
@@ -159,56 +112,7 @@ app.post('/register', async (req, res) => {
   }
 });
 
-
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-
-//   // Validate request data quickly
-//   if (!email || !password) {
-//     return res.status(400).json({ message: 'All fields are required.' });
-//   }
-
-//   try {
-//     // Check for existing user by email
-//     const existingUser = await User.findOne({ email });
-
-//     // If user does not exist, return an error
-//     if (!existingUser) {
-//       return res.status(401).json({ message: 'Invalid email or password.' });
-//     }
-
-//     // Check if the password matches (directly compare the password if it's not hashed)
-//     if (existingUser.password !== password) {
-//       return res.status(401).json({ message: 'Invalid email or password.' });
-//     }
-
-//     // If both email and password are correct, return success message
-//     return res.status(200).json({ message: 'Login successful.' });
-
-//   } catch (error) {
-//     console.error(error); // Log the error for debugging
-//     return res.status(500).json({ message: 'An error occurred, please try again.' });
-//   }
-// });
-
-
-
 // Login
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user || !(await user.matchPassword(password))) {
-//       return res.status(401).json({ message: "Invalid email or password. Please register if you don't have an account." });
-//     }
-//     const token = generateToken(user._id);
-//     res.cookie('token', token, { httpOnly: true });
-//     return res.status(200).json({ message: 'Login successful', user });
-//   } catch (error) {
-//     return res.status(500).json({ error: 'Server error' });
-//   }
-// });
-
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -222,18 +126,13 @@ app.post('/login', async (req, res) => {
     const user = await User.findOne({ email });
 
     // If user does not exist
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password.' });
-    }
-
-    // Check if the password matches (without using matchPassword)
-    if (user.password !== password) {
+    if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
     // Generate and set token in the response cookie
     const token = generateToken(user._id);
-    res.cookie('token', token, { httpOnly: true });
+    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
     // Return successful login message
     return res.status(200).json({ message: 'Login successful.' });
@@ -244,47 +143,19 @@ app.post('/login', async (req, res) => {
   }
 });
 
-
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-
-//   // Validate request data
-//   if (!email || !password) {
-//     return res.status(400).json({ message: 'All fields are required.' });
-//   }
-
-//   try {
-//     // Check for existing user
-//     const user = await User.findOne({ email });
-
-//     // Check if email exists and password matches
-//     if (!user || !(await user.matchPassword(password))) {
-//       return res.status(401).json({ message: 'Invalid email or password.' });
-//     }
-
-//     // Return successful login message
-//     return res.status(200).json({ message: 'Login successful.' });
-
-//   } catch (error) {
-//     console.error(error);
-//     return console.log('sever fail')
-//   }
-// });
-
-
 // Logout
-app.get('/logout',  (req, res) => {
+app.get('/logout', (req, res) => {
   res.clearCookie('token');
   return res.status(200).json({ message: 'Logout successful' });
 });
 
 // Root route
-app.get('/',  (req, res) => {
+app.get('/', (req, res) => {
   res.send('Welcome to the backend server');
 });
 
-// GET all accounts
-app.get('/account',  async (req, res) => {
+// GET all accounts - Protected route
+app.get('/account',  async (req, res) => { // Added 'protect' middleware
   try {
     const accounts = await Account.find();
     res.json(accounts);
@@ -294,7 +165,7 @@ app.get('/account',  async (req, res) => {
 });
 
 // PUT update an account by ID
-app.put('/account/:id', async (req, res) => {
+app.put('/account/:id', async (req, res) => { // Added 'protect' middleware
   try {
     const { id } = req.params;
     const update = req.body;
@@ -306,7 +177,7 @@ app.put('/account/:id', async (req, res) => {
 });
 
 // POST create a new account
-app.post('/account', async (req, res) => {
+app.post('/account',  async (req, res) => { // Added 'protect' middleware
   try {
     const { Description, Username, Password, URL, Notes } = req.body;
     const newAccount = new Account({ Description, Username, Password, URL, Notes });
