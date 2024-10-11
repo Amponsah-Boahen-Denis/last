@@ -155,7 +155,7 @@ app.get('/', (req, res) => {
 });
 
 // GET all accounts - Protected route
-app.get('/account',  async (req, res) => { // Added 'protect' middleware
+app.get('/account', protect, async (req, res) => { // Added 'protect' middleware
   try {
     const accounts = await Account.find();
     res.json(accounts);
@@ -165,7 +165,7 @@ app.get('/account',  async (req, res) => { // Added 'protect' middleware
 });
 
 // PUT update an account by ID
-app.put('/account/:id', async (req, res) => { // Added 'protect' middleware
+app.put('/account/:id', protect, async (req, res) => { // Added 'protect' middleware
   try {
     const { id } = req.params;
     const update = req.body;
@@ -177,7 +177,7 @@ app.put('/account/:id', async (req, res) => { // Added 'protect' middleware
 });
 
 // POST create a new account
-app.post('/account',  async (req, res) => { // Added 'protect' middleware
+app.post('/account', protect, async (req, res) => { // Added 'protect' middleware
   try {
     const { Description, Username, Password, URL, Notes } = req.body;
     const newAccount = new Account({ Description, Username, Password, URL, Notes });
