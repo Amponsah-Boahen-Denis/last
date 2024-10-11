@@ -17,27 +17,52 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('https://lastback.vercel.app/register', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post('https://lastback.vercel.app/register', formData, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      if (response) {
-        alert('Registration successful! Redirecting to login...');
-      return  navigate('/'); // Redirect to login after successful registration
-      } else {
-        alert(response.data.message || 'Registration failed or account already exist!');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Registration failed or account already exist!');
+  //     if (response) {
+  //       alert('Registration successful! Redirecting to login...');
+  //     return  navigate('/'); // Redirect to login after successful registration
+  //     } else {
+  //       alert(response.data.message || 'Registration failed or account already exist!');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     alert('Registration failed or account already exist!');
+  //   }
+  // };
+
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault(); // Prevent default form submission
+
+  try {
+    const response = await axios.post('https://lastback.vercel.app/register', formData, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (response.status === 200 && response.data.token) {
+      // Store the token in localStorage
+      localStorage.setItem('token', response.data.token);
+      alert('Registration successful! Redirecting to login...');
+      navigate('/'); // Redirect to login after successful registration
+    } else {
+      alert(response.data.message || 'Registration failed or account already exists!');
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Registration failed or account already exists!');
+  }
+};
 
+  
   return (
     <div style={styles.container}>
       <h2 style={styles.header}>Register</h2>
