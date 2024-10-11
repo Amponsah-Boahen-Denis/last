@@ -71,11 +71,11 @@ const handleSubmit = async (e) => {
     });
 
     // Check if the response contains a token or success message
-    if (response.status === 200 && response.data.token) {
+    if (response) {
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);
       alert('Login successful!'); // Notify user of success
-      navigate('/edit'); // Redirect to the edit page on successful login
+    return  navigate('/edit'); // Redirect to the edit page on successful login
     } else {
       alert('Login failed. Please check your credentials or register.'); // Generic error message
     }
