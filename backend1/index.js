@@ -83,7 +83,6 @@ const protect = async (req, res, next) => {
 };
 
 // Routes
-
 // Register
 app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
