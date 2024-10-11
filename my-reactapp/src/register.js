@@ -48,11 +48,11 @@ const handleSubmit = async (e) => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    if (response.status === 200 && response.data.token) {
+    if (response) {
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);
       alert('Registration successful! Redirecting to login...');
-      navigate('/'); // Redirect to login after successful registration
+      return navigate('/'); // Redirect to login after successful registration
     } else {
       alert(response.data.message || 'Registration failed or account already exists!');
     }
