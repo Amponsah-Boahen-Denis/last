@@ -15,7 +15,6 @@ const tok = "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
-
 // CORS configuration
 app.use(cors({
   origin: ["https://lastfront.vercel.app"],
