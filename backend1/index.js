@@ -284,7 +284,7 @@ app.get('/',  (req, res) => {
 });
 
 // GET all accounts
-app.get('/account',   async (req, res) => {
+app.get('/account',  async (req, res) => {
   try {
     const accounts = await Account.find();
     res.json(accounts);
@@ -294,7 +294,7 @@ app.get('/account',   async (req, res) => {
 });
 
 // PUT update an account by ID
-app.put('/account/:id',async (req, res) => {
+app.put('/account/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const update = req.body;
