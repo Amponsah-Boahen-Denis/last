@@ -15,25 +15,65 @@ function EditRecord() {
     URL: ''
   });
 
-  useEffect(() => {
-    axios.get('https://lastback.vercel.app/account')
-      .then(response => {
-        setAccounts(response.data);
-        const account = response.data.find(acc => acc._id === selectedAccountId);
-        if (account) {
-          setFormData({
-            Username: account.Username,
-            Password: account.Password,
-            Notes: account.Notes,
-            URL: account.URL
-          });
-        }
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
-  }, [selectedAccountId]);
+  // useEffect(() => {
+  //   axios.get('https://lastback.vercel.app/account')
+  //     .then(response => {
+  //       setAccounts(response.data);
+  //       const account = response.data.find(acc => acc._id === selectedAccountId);
+  //       if (account) {
+  //         setFormData({
+  //           Username: account.Username,
+  //           Password: account.Password,
+  //           Notes: account.Notes,
+  //           URL: account.URL
+  //         });
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error fetching the data!', error);
+  //     });
+  // }, [selectedAccountId]);
 
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Assuming the JWT token is stored in localStorage
+      if (!token) {
+        console.error('No token found! Please login.');
+        return;
+      }
+
+      // Make the GET request with the Authorization header
+      const response = await axios.get('https://lastback.vercel.app/account', {
+        headers: {
+          Authorization: `Bearer ${token}` // Include JWT token in the request
+        }
+      });
+
+      // Update the state with the fetched data
+      setAccounts(response.data);
+
+      const account = response.data.find(acc => acc._id === selectedAccountId);
+      if (account) {
+        setFormData({
+          Username: account.Username,
+          Password: account.Password,
+          Notes: account.Notes,
+          URL: account.URL
+        });
+      }
+    } catch (error) {
+      console.error('There was an error fetching the data!', error);
+    }
+  };
+
+  // Call the fetchData function
+  fetchData();
+}, [selectedAccountId]);
+
+
+  
   const handleAccountChange = (event) => {
     setSelectedAccountId(event.target.value);
   };
@@ -46,21 +86,49 @@ function EditRecord() {
     }));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData)
-      .then(response => {
-        //navigate('/'); // Navigate back to the home page
-      })
-      .catch(error => {
-        console.error('There was an error updating the data!', error);
-      });
-  };
 
-  const handleSubmit2 = (event) => {
-    event.preventDefault();
-        navigate('/password'); // Navigate back to the home page
-  };
+
+  const handleSubmit = (event) => {
+  event.preventDefault();
+
+  // Get the token from localStorage
+  const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+  if (!token) {
+    console.error('No token found! Please login.');
+    return;
+  }
+
+  // Make the PUT request with the Authorization header
+  axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}` // Include JWT token in the request
+    }
+  })
+    .then(response => {
+      console.log('Data updated successfully!');
+      //navigate('/'); // Navigate back to the home page if necessary
+    })
+    .catch(error => {
+      console.error('There was an error updating the data!', error);
+    });
+};
+
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData)
+  //     .then(response => {
+  //       //navigate('/'); // Navigate back to the home page
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error updating the data!', error);
+  //     });
+  // };
+
+  // const handleSubmit2 = (event) => {
+  //   event.preventDefault();
+  //       navigate('/password'); // Navigate back to the home page
+  // };
 
   return (
     <div className='container'>
