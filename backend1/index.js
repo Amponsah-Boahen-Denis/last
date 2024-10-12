@@ -133,8 +133,15 @@ app.post('/login', async (req, res) => {
     }
 
     // Generate and set token in response cookie
-    const token = generateToken(user._id);
-    res.cookie('token', token, { httpOnly: true, secure: false});
+    // const token = generateToken(user._id);
+    // res.cookie('token', token, { httpOnly: true, secure: false});
+const token = generateToken(user._id);
+
+// Send token in cookie (if required)
+res.cookie('token', token, { httpOnly: true, secure: false });
+
+// Also send the token in the response body
+res.json({ token });
 
     // Return success message
     return res.status(200).json({ message: 'Login successful.' });
