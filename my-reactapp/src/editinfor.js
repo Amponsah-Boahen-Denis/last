@@ -103,11 +103,11 @@ function EditRecord() {
       return;
     }
 
-    if (isTokenExpired(token)) {
-      console.error('Token expired! Please login again.');
-      setMessage('Token expired! Please login again.');
-      return;
-    }
+    // if (isTokenExpired(token)) {
+    //   console.error('Token expired! Please login again.');
+    //   setMessage('Token expired! Please login again.');
+    //   return;
+    // }
 
     // Proceed with updating account data
     axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
