@@ -57,7 +57,8 @@ function EditRecord() {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
-          }
+          },
+           withCredentials: true,
         });
 
         setAccounts(response.data);
