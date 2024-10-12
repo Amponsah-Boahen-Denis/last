@@ -16,7 +16,6 @@ const tok = process.env.JWT_SECRET || "c44d14c3ec99655146083383eb33b6d2f720927f0
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
-
 // CORS configuration
 app.use(cors({
   origin: ["https://lastfront.vercel.app"], // Update this with the correct frontend origin
