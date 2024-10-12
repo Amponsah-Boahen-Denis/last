@@ -11,46 +11,123 @@ function AddPassword() {
   const [notes, setNotes] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    
-    // Create a new account object
-    const newAccount = {
-      Description: description,
-      Username: username,
-      Password: password,
-      URL: url,
-      Notes: notes
-    };
 
-    // Get the token from localStorage
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found! Please login.');
-      setMessage('No token found! Please login.');
-      return;
-    }
+  const isTokenExpired = (token) => {
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  return payload.exp * 1000 < Date.now();
+};
 
+  const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  // Validate form inputs before submission
+  if (!description || !username || !password || !url) {
+    setMessage('Please fill in all required fields.');
+    return;
+  }
+
+  // Create a new account object
+  const newAccount = {
+    Description: description,
+    Username: username,
+    Password: password,
+    URL: url,
+    Notes: notes
+  };
+
+  // Get the token from localStorage
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found! Please login.');
+    setMessage('No token found! Please login.');
+    return;
+  }
+
+  // Check if the token is expired
+  const isExpired = isTokenExpired(token); // Ensure you have this utility function
+  if (isExpired) {
+    console.error('Token is expired. Please login again.');
+    setMessage('Token expired! Please login again.');
+    return;
+  }
+
+  try {
     // Send POST request to the server to add a new password entry with Authorization header
-    axios.post('https://lastback.vercel.app/account', newAccount, {
+    const response = await axios.post('https://lastback.vercel.app/account', newAccount, {
       headers: {
         Authorization: `Bearer ${token}` // Include JWT token in the request
       }
-    })
-      .then(response => {
-        setMessage('Password added successfully!');
-        // Clear form fields after successful submission
-        setDescription('');
-        setUsername('');
-        setPassword('');
-        setUrl('');
-        setNotes('');
-      })
-      .catch(error => {
-        console.error('There was an error adding the password!', error);
-        setMessage('Failed to add password. Please try again.');
-      });
-  };
+    });
+
+    // On successful addition of the account
+    setMessage('Password added successfully!');
+
+    // Clear form fields after successful submission
+    setDescription('');
+    setUsername('');
+    setPassword('');
+    setUrl('');
+    setNotes('');
+
+  } catch (error) {
+    // Enhanced error handling
+    if (error.response) {
+      // Server responded with a status other than 200
+      console.error('Error response:', error.response.data);
+      setMessage(`Failed to add password: ${error.response.data.message || 'Unknown error.'}`);
+    } else if (error.request) {
+      // Request was made but no response received
+      console.error('Error request:', error.request);
+      setMessage('No response from the server. Please try again later.');
+    } else {
+      // Something else happened while setting up the request
+      console.error('Error message:', error.message);
+      setMessage('An unexpected error occurred. Please try again.');
+    }
+  }
+};
+
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+    
+  //   // Create a new account object
+  //   const newAccount = {
+  //     Description: description,
+  //     Username: username,
+  //     Password: password,
+  //     URL: url,
+  //     Notes: notes
+  //   };
+
+  //   // Get the token from localStorage
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('No token found! Please login.');
+  //     setMessage('No token found! Please login.');
+  //     return;
+  //   }
+
+  //   // Send POST request to the server to add a new password entry with Authorization header
+  //   axios.post('https://lastback.vercel.app/account', newAccount, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}` // Include JWT token in the request
+  //     }
+  //   })
+  //     .then(response => {
+  //       setMessage('Password added successfully!');
+  //       // Clear form fields after successful submission
+  //       setDescription('');
+  //       setUsername('');
+  //       setPassword('');
+  //       setUrl('');
+  //       setNotes('');
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error adding the password!', error);
+  //       setMessage('Failed to add password. Please try again.');
+  //     });
+  // };
 
   return (
     <div>
