@@ -74,6 +74,7 @@ const handleSubmit = async (e) => {
     if (response) {
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);
+      console.log(response.data.token)
       alert('Login successful!'); // Notify user of success
     return  navigate('/edit'); // Redirect to the edit page on successful login
     } else {
