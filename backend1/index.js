@@ -10,7 +10,6 @@ const cookieParser = require('cookie-parser');
 // Load environment variables
 dotenv.config();
 const app = express();
-
 // Secure JWT token secret from environment variables
 const tok = process.env.JWT_SECRET || "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"; // Ensure to set this in .env for production
 
