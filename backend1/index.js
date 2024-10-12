@@ -62,25 +62,8 @@ const generateToken = (id) => {
 
 
 
-// const protect = async (req, res, next) => {
-//   const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Adjust to get the token from headers
-//   if (!token) {
-//     return res.status(401).json({ message: 'No token, not authorized' });
-//   }
-//   try {
-//     const decoded = jwt.verify(token, tok);
-//     req.user = await User.findById(decoded.id).select('-password');
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({ message: 'Not authorized' });
-//   }
-// };
-
-
-
-// Middleware to protect routes
 const protect = async (req, res, next) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Adjust to get the token from headers
   if (!token) {
     return res.status(401).json({ message: 'No token, not authorized' });
   }
@@ -92,6 +75,23 @@ const protect = async (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized' });
   }
 };
+
+
+
+// Middleware to protect routes
+// const protect = async (req, res, next) => {
+//   const token = req.cookies.token;
+//   if (!token) {
+//     return res.status(401).json({ message: 'No token, not authorized' });
+//   }
+//   try {
+//     const decoded = jwt.verify(token, tok);
+//     req.user = await User.findById(decoded.id).select('-password');
+//     next();
+//   } catch (error) {
+//     return res.status(401).json({ message: 'Not authorized' });
+//   }
+// };
 
 // Routes
 
