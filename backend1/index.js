@@ -23,7 +23,6 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "OPTIONS"],
   credentials: true, // Allow credentials (cookies)
 }));
-
 // MongoDB connection
 mongoose.connect('mongodb+srv://Denis:decimal@cluster0.yzgehjl.mongodb.net/password?retryWrites=true&w=majority&appName=Cluster0', 
   { useNewUrlParser: true, useUnifiedTopology: true })
