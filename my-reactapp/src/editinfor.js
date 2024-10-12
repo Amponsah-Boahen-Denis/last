@@ -40,6 +40,7 @@ function EditRecord() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
+        console.log(token)
         if (!token) {
           console.error('No token found! Please login.');
           setMessage('No token found! Please login.');
