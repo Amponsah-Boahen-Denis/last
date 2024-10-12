@@ -16,40 +16,84 @@ function EditRecord() {
     URL: ''
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error('No token found! Please login.');
-          return;
-        }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const token = localStorage.getItem('token');
+  //       if (!token) {
+  //         console.error('No token found! Please login.');
+  //         return;
+  //       }
 
-        const response = await axios.get('https://lastback.vercel.app/account', {
-          headers: {
-            Authorization: `Bearer ${token}` 
-          }
-        });
+  //       const response = await axios.get('https://lastback.vercel.app/account', {
+  //         headers: {
+  //           Authorization: `Bearer ${token}` 
+  //         }
+  //       });
 
-        setAccounts(response.data);
+  //       setAccounts(response.data);
 
-        const account = response.data.find(acc => acc._id === selectedAccountId);
-        if (account) {
-          setFormData({
-            Username: account.Username,
-            Password: account.Password,
-            Notes: account.Notes,
-            URL: account.URL
-          });
-        }
-      } catch (error) {
-        console.error('There was an error fetching the data!', error);
+  //       const account = response.data.find(acc => acc._id === selectedAccountId);
+  //       if (account) {
+  //         setFormData({
+  //           Username: account.Username,
+  //           Password: account.Password,
+  //           Notes: account.Notes,
+  //           URL: account.URL
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error('There was an error fetching the data!', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [selectedAccountId]);
+
+
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found! Please login.');
+        return;
       }
-    };
 
-    fetchData();
-  }, [selectedAccountId]);
+      const isExpired = isTokenExpired(token); // Call the expiration check function
+      if (isExpired) {
+        console.error('Token is expired. Please login again.');
+        return;
+      }
 
+      const response = await axios.get('https://lastback.vercel.app/account', {
+        headers: {
+          Authorization: `Bearer ${token}` 
+        }
+      });
+
+      setAccounts(response.data);
+
+      const account = response.data.find(acc => acc._id === selectedAccountId);
+      if (account) {
+        setFormData({
+          Username: account.Username,
+          Password: account.Password,
+          Notes: account.Notes,
+          URL: account.URL
+        });
+      }
+    } catch (error) {
+      console.error('There was an error fetching the data!', error.response ? error.response.data : error);
+    }
+  };
+
+  fetchData();
+}, [selectedAccountId]);
+
+
+  
   const handleAccountChange = (event) => {
     setSelectedAccountId(event.target.value);
   };
