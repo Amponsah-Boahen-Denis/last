@@ -55,8 +55,18 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 const User = mongoose.model('User', userSchema);
 
 // JWT token generation function
-const generateToken = (id) => {
-  return jwt.sign({ id }, tok, { expiresIn: '10d' });
+// const generateToken = (id) => {
+//   return jwt.sign({ id }, tok, { expiresIn: '10d' });
+// };
+
+const generateToken = (userId, secretKey, expiresIn = '10d') => {
+  try {
+    const token = jwt.sign({ id: userId }, secretKey, { expiresIn });
+    return token;
+  } catch (error) {
+    console.error('Token generation failed:', error);
+    throw new Error('Token generation failed'); // Throw an error to handle it in the calling function
+  }
 };
 
 // Middleware to protect routes
