@@ -61,6 +61,17 @@ const User = mongoose.model('User', userSchema);
 
 const generateToken = (id) => jwt.sign({ id }, tok, { expiresIn: '10d' });
 
+// Verify Token
+const verifyToken = (token) => {
+  try {
+    return jwt.verify(token, tok);
+  } catch (error) {
+    console.error('Token verification failed:', error.message);
+    return null; // Handle error as needed
+  }
+};
+
+verifyToken()
 
 // Middleware to protect routes
 const protect = async (req, res, next) => {
