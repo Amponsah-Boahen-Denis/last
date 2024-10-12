@@ -102,28 +102,69 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// Login
+
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  // Validate request data
   if (!email || !password) {
     return res.status(400).json({ message: 'All fields are required.' });
   }
 
   try {
+    // Find the user by email
     const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password))) {
+    
+    // If user does not exist, return an error
+    if (!user) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
 
+    // Compare the input password with the stored hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    // If the passwords do not match, return an error
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // Generate and set token in response cookie
     const token = generateToken(user._id);
     res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+
+    // Return success message
     return res.status(200).json({ message: 'Login successful.' });
+
   } catch (error) {
-    console.error(error);
+    console.error('Login Error:', error); // Log the error for debugging
     return res.status(500).json({ message: 'Server error, please try again later.' });
   }
 });
+
+
+
+// Login
+// app.post('/login', async (req, res) => {
+//   const { email, password } = req.body;
+
+//   if (!email || !password) {
+//     return res.status(400).json({ message: 'All fields are required.' });
+//   }
+
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user || !(await user.matchPassword(password))) {
+//       return res.status(401).json({ message: 'Invalid email or password.' });
+//     }
+
+//     const token = generateToken(user._id);
+//     res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+//     return res.status(200).json({ message: 'Login successful.' });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: 'Server error, please try again later.' });
+//   }
+// });
 
 // Logout
 app.get('/logout', (req, res) => {
