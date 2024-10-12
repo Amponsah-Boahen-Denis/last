@@ -55,7 +55,8 @@ function EditRecord() {
 
         const response = await axios.get('https://lastback.vercel.app/account', {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
         });
 
