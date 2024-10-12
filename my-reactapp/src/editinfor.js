@@ -16,6 +16,13 @@ function EditRecord() {
     URL: ''
   });
 
+
+
+  const isTokenExpired = (token) => {
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  return payload.exp * 1000 < Date.now();
+};
+
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -93,6 +100,9 @@ useEffect(() => {
 }, [selectedAccountId]);
 
 
+
+
+  
   
   const handleAccountChange = (event) => {
     setSelectedAccountId(event.target.value);
@@ -106,28 +116,65 @@ useEffect(() => {
     }));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found! Please login.');
-      return;
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('No token found! Please login.');
+  //     return;
+  //   }
+
+  //   axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}` 
+  //     }
+  //   })
+  //     .then(response => {
+  //       console.log('Data updated successfully!');
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error updating the data!', error);
+  //     });
+  // };
+
+
+const handleSubmit = (event) => {
+  event.preventDefault();
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found! Please login.');
+    setMessage('No token found! Please login.');
+    return;
+  }
+
+  // Check if the token is expired
+  if (isTokenExpired(token)) {
+    console.error('Token expired! Please login again.');
+    setMessage('Token expired! Please login again.');
+    return;
+  }
+
+  // Proceed with updating account data
+  axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-
-    axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}` 
-      }
+  })
+    .then(response => {
+      console.log('Data updated successfully!');
+      setMessage('Account updated successfully.');
     })
-      .then(response => {
-        console.log('Data updated successfully!');
-      })
-      .catch(error => {
-        console.error('There was an error updating the data!', error);
-      });
-  };
+    .catch(error => {
+      console.error('There was an error updating the data!', error);
+      setMessage('Failed to update account. Please try again.');
+    });
+};
 
+
+
+  
   const handleSubmit2 = (event) => {
     event.preventDefault();
     navigate('/password');
