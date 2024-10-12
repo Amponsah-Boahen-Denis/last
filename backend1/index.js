@@ -6,9 +6,11 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs'); // Using bcrypt to securely hash passwords
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+
 // Load environment variables
 dotenv.config();
 const app = express();
+
 // Secure JWT token secret from environment variables
 const tok = process.env.JWT_SECRET || "c44d14c3ec99655146083383eb33b6d2f720927f05b19ad29f711540576cfef5bdf2ee4c918f1d2d4831ef726d2068cf9c973924939646198836a8dc19bae4eb"; // Ensure you set this in your .env file for production
 
@@ -16,12 +18,14 @@ const tok = process.env.JWT_SECRET || "c44d14c3ec99655146083383eb33b6d2f720927f0
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
+
 // CORS configuration
 app.use(cors({
   origin: ["https://lastfront.vercel.app"], // Update this with the correct frontend origin
   methods: ["GET", "POST", "PUT", "OPTIONS"],
   credentials: true, // Allow credentials (cookies)
 }));
+
 // MongoDB connection
 mongoose.connect('mongodb+srv://Denis:decimal@cluster0.yzgehjl.mongodb.net/password?retryWrites=true&w=majority&appName=Cluster0', 
   { useNewUrlParser: true, useUnifiedTopology: true })
@@ -55,9 +59,7 @@ const generateToken = (id) => {
   return jwt.sign({ id }, tok, { expiresIn: '10d' });
 };
 
-
-
-
+// Middleware to protect routes
 const protect = async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Adjust to get the token from headers
   if (!token) {
@@ -71,23 +73,6 @@ const protect = async (req, res, next) => {
     return res.status(401).json({ message: 'Not authorized' });
   }
 };
-
-
-
-// Middleware to protect routes
-// const protect = async (req, res, next) => {
-//   const token = req.cookies.token;
-//   if (!token) {
-//     return res.status(401).json({ message: 'No token, not authorized' });
-//   }
-//   try {
-//     const decoded = jwt.verify(token, tok);
-//     req.user = await User.findById(decoded.id).select('-password');
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({ message: 'Not authorized' });
-//   }
-// };
 
 // Routes
 
@@ -194,6 +179,7 @@ app.post('/account', protect, async (req, res) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
 
 // const express = require('express');
