@@ -149,6 +149,7 @@ const handleSubmit = (event) => {
     return;
   }
 
+   const [message, setMessage] = useState('');
   // Check if the token is expired
   if (isTokenExpired(token)) {
     console.error('Token expired! Please login again.');
