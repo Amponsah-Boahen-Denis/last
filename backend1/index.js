@@ -59,15 +59,8 @@ const User = mongoose.model('User', userSchema);
 //   return jwt.sign({ id }, tok, { expiresIn: '10d' });
 // };
 
-const generateToken = (userId, secretKey, expiresIn = '10d') => {
-  try {
-    const token = jwt.sign({ id: userId }, secretKey, { expiresIn });
-    return token;
-  } catch (error) {
-    console.error('Token generation failed:', error);
-    throw new Error('Token generation failed'); // Throw an error to handle it in the calling function
-  }
-};
+const generateToken = (id) => jwt.sign({ id }, tok, { expiresIn: '10d' });
+
 
 // Middleware to protect routes
 const protect = async (req, res, next) => {
