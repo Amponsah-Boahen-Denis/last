@@ -20,20 +20,20 @@ function EditRecord() {
   const [message, setMessage] = useState(''); // Added message state
 
   // Token expiry check function
-  const isTokenExpired = (token) => {
-    try {
-      const tokenParts = token.split('.');
-      if (tokenParts.length !== 3) {
-        console.error('Invalid token format.');
-        return true; // Consider token expired if it's invalid
-      }
-      const payload = JSON.parse(atob(tokenParts[1]));
-      return payload.exp * 1000 < Date.now();
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return true; // Treat token as expired on error
-    }
-  };
+  // const isTokenExpired = (token) => {
+  //   try {
+  //     const tokenParts = token.split('.');
+  //     if (tokenParts.length !== 3) {
+  //       console.error('Invalid token format.');
+  //       return true; // Consider token expired if it's invalid
+  //     }
+  //     const payload = JSON.parse(atob(tokenParts[1]));
+  //     return payload.exp * 1000 < Date.now();
+  //   } catch (error) {
+  //     console.error('Error decoding token:', error);
+  //     return true; // Treat token as expired on error
+  //   }
+  // };
 
   // Fetch data on component load and when selectedAccountId changes
   useEffect(() => {
@@ -46,11 +46,11 @@ function EditRecord() {
           return;
         }
 
-        if (isTokenExpired(token)) {
-          console.error('Token is expired. Please login again.');
-          setMessage('Token is expired. Please login again.');
-          return;
-        }
+        // if (isTokenExpired(token)) {
+        //   console.error('Token is expired. Please login again.');
+        //   setMessage('Token is expired. Please login again.');
+        //   return;
+        // }
 
         const response = await axios.get('https://lastback.vercel.app/account', {
           headers: {
