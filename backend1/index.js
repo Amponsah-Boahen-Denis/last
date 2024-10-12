@@ -120,7 +120,7 @@ app.post('/login', async (req, res) => {
 
     // Generate and set token in response cookie
     const token = generateToken(user._id);
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    res.cookie('token', token, { httpOnly: true, secure: false});
 
     // Return success message
     return res.status(200).json({ message: 'Login successful.' });
