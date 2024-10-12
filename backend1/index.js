@@ -59,7 +59,10 @@ const User = mongoose.model('User', userSchema);
 //   return jwt.sign({ id }, tok, { expiresIn: '10d' });
 // };
 
-const generateToken = (id) => jwt.sign({ id }, tok, { expiresIn: '10d' });
+const generateToken = (id) => {
+  return id; // Return the user ID as the token
+};
+
 
 // Verify Token
 const verifyToken = (token) => {
