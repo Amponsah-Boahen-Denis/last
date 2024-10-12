@@ -15,51 +15,7 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post('https://lastback.vercel.app/login', formData, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       withCredentials: true, // Ensure cookies are included in the request
-  //     });
 
-  //     if (response.status === 200) {
-  //       // No need to manually store the token; the backend should handle cookies
-  //       alert('Login successful!');
-  //       navigate('/'); // Redirect on successful login
-  //     } else {
-  //       alert(response.data.message || 'Login failed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Login Error:', error);
-  //     alert('An unexpected error occurred. Please try again later.');
-  //   }
-  // };
-
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault(); // Prevent default form submission
-
-//     try {
-//         const response = await axios.post('https://lastback.vercel.app/login', formData, {
-//             headers: { 'Content-Type': 'application/json' },
-//             withCredentials: true,
-//         });
-
-//         // Check if the response contains a success message
-//         if (response) {
-//             alert('Login successful!'); // Notify user of success
-//           return  navigate('/edit'); // Redirect to homepage on successful login
-//         } else {
-//             alert('Login failed. Please check your credentials OR register.'); // Generic error message
-//         }
-//     } catch (error) {
-//         console.error('Login Error:', error);
-//         alert('Login failed. Please check your credentials or register.'); // Generic error message
-//     }
-// };
 
 const handleSubmit = async (e) => {
   e.preventDefault(); // Prevent default form submission
@@ -70,21 +26,47 @@ const handleSubmit = async (e) => {
       withCredentials: true, // Ensure cookies are included in the request if the backend uses cookies for sessions
     });
 
-    // Check if the response contains a token or success message
-    if (response) {
+    // Check if the response contains a token
+    if (response && response.data && response.data.token) {
       // Store the token in localStorage
       localStorage.setItem('token', response.data.token);
-      console.log(response.data.token)
+      console.log('Token:', response.data.token);
       alert('Login successful!'); // Notify user of success
-    return  navigate('/edit'); // Redirect to the edit page on successful login
+      return navigate('/edit'); // Redirect to the edit page on successful login
     } else {
-      alert('Login failed. Please check your credentials or register.'); // Generic error message
+      alert('Login failed. No token received. Please check your credentials or try again.'); // Error if no token is found
     }
   } catch (error) {
     console.error('Login Error:', error);
     alert('Login failed. Please check your credentials or try again later.'); // Generic error message
   }
 };
+
+  
+// const handleSubmit = async (e) => {
+//   e.preventDefault(); // Prevent default form submission
+
+//   try {
+//     const response = await axios.post('https://lastback.vercel.app/login', formData, {
+//       headers: { 'Content-Type': 'application/json' },
+//       withCredentials: true, // Ensure cookies are included in the request if the backend uses cookies for sessions
+//     });
+
+//     // Check if the response contains a token or success message
+//     if (response) {
+//       // Store the token in localStorage
+//       localStorage.setItem('token', response.data.token);
+//       console.log(response.data.token)
+//       alert('Login successful!'); // Notify user of success
+//     return  navigate('/edit'); // Redirect to the edit page on successful login
+//     } else {
+//       alert('Login failed. Please check your credentials or register.'); // Generic error message
+//     }
+//   } catch (error) {
+//     console.error('Login Error:', error);
+//     alert('Login failed. Please check your credentials or try again later.'); // Generic error message
+//   }
+// };
 
 
   const handleRegisterRedirect = (e) => {
