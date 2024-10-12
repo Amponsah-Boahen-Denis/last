@@ -7,6 +7,8 @@ import './css/edit.css';
 function EditRecord() {
   const { id } = useParams();
   const navigate = useNavigate();
+  
+  // State for accounts and form data
   const [accounts, setAccounts] = useState([]);
   const [selectedAccountId, setSelectedAccountId] = useState(id);
   const [formData, setFormData] = useState({
@@ -15,99 +17,64 @@ function EditRecord() {
     Notes: '',
     URL: ''
   });
+  const [message, setMessage] = useState(''); // Added message state
 
-
-
+  // Token expiry check function
   const isTokenExpired = (token) => {
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  return payload.exp * 1000 < Date.now();
-};
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const token = localStorage.getItem('token');
-  //       if (!token) {
-  //         console.error('No token found! Please login.');
-  //         return;
-  //       }
-
-  //       const response = await axios.get('https://lastback.vercel.app/account', {
-  //         headers: {
-  //           Authorization: `Bearer ${token}` 
-  //         }
-  //       });
-
-  //       setAccounts(response.data);
-
-  //       const account = response.data.find(acc => acc._id === selectedAccountId);
-  //       if (account) {
-  //         setFormData({
-  //           Username: account.Username,
-  //           Password: account.Password,
-  //           Notes: account.Notes,
-  //           URL: account.URL
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error('There was an error fetching the data!', error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [selectedAccountId]);
-
-
-
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found! Please login.');
-        return;
-      }
-
-      const isExpired = isTokenExpired(token); // Call the expiration check function
-      if (isExpired) {
-        console.error('Token is expired. Please login again.');
-        return;
-      }
-
-      const response = await axios.get('https://lastback.vercel.app/account', {
-        headers: {
-          Authorization: `Bearer ${token}` 
-        }
-      });
-
-      setAccounts(response.data);
-
-      const account = response.data.find(acc => acc._id === selectedAccountId);
-      if (account) {
-        setFormData({
-          Username: account.Username,
-          Password: account.Password,
-          Notes: account.Notes,
-          URL: account.URL
-        });
-      }
-    } catch (error) {
-      console.error('There was an error fetching the data!', error.response ? error.response.data : error);
-    }
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp * 1000 < Date.now();
   };
 
-  fetchData();
-}, [selectedAccountId]);
+  // Fetch data on component load and when selectedAccountId changes
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found! Please login.');
+          setMessage('No token found! Please login.');
+          return;
+        }
 
+        const isExpired = isTokenExpired(token);
+        if (isExpired) {
+          console.error('Token is expired. Please login again.');
+          setMessage('Token is expired. Please login again.');
+          return;
+        }
 
+        const response = await axios.get('https://lastback.vercel.app/account', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
+        setAccounts(response.data);
 
-  
-  
+        const account = response.data.find(acc => acc._id === selectedAccountId);
+        if (account) {
+          setFormData({
+            Username: account.Username,
+            Password: account.Password,
+            Notes: account.Notes,
+            URL: account.URL
+          });
+        }
+      } catch (error) {
+        console.error('There was an error fetching the data!', error.response ? error.response.data : error);
+        setMessage('Failed to fetch data. Please try again.');
+      }
+    };
+
+    fetchData();
+  }, [selectedAccountId]);
+
+  // Handle account change from the dropdown
   const handleAccountChange = (event) => {
     setSelectedAccountId(event.target.value);
   };
 
+  // Handle form input change
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData(prevState => ({
@@ -116,66 +83,40 @@ useEffect(() => {
     }));
   };
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
+  // Handle form submission for updating account data
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     console.error('No token found! Please login.');
-  //     return;
-  //   }
-
-  //   axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}` 
-  //     }
-  //   })
-  //     .then(response => {
-  //       console.log('Data updated successfully!');
-  //     })
-  //     .catch(error => {
-  //       console.error('There was an error updating the data!', error);
-  //     });
-  // };
-
-
-const handleSubmit = (event) => {
-  event.preventDefault();
-
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No token found! Please login.');
-    setMessage('No token found! Please login.');
-    return;
-  }
-
-   const [message, setMessage] = useState('');
-  // Check if the token is expired
-  if (isTokenExpired(token)) {
-    console.error('Token expired! Please login again.');
-    setMessage('Token expired! Please login again.');
-    return;
-  }
-
-  // Proceed with updating account data
-  axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
-    headers: {
-      Authorization: `Bearer ${token}`
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found! Please login.');
+      setMessage('No token found! Please login.');
+      return;
     }
-  })
-    .then(response => {
-      console.log('Data updated successfully!');
-      setMessage('Account updated successfully.');
+
+    if (isTokenExpired(token)) {
+      console.error('Token expired! Please login again.');
+      setMessage('Token expired! Please login again.');
+      return;
+    }
+
+    // Proceed with updating account data
+    axios.put(`https://lastback.vercel.app/account/${selectedAccountId}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
-    .catch(error => {
-      console.error('There was an error updating the data!', error);
-      setMessage('Failed to update account. Please try again.');
-    });
-};
+      .then(response => {
+        console.log('Data updated successfully!');
+        setMessage('Account updated successfully.');
+      })
+      .catch(error => {
+        console.error('There was an error updating the data!', error);
+        setMessage('Failed to update account. Please try again.');
+      });
+  };
 
-
-
-  
+  // Navigate to password page
   const handleSubmit2 = (event) => {
     event.preventDefault();
     navigate('/password');
@@ -185,7 +126,9 @@ const handleSubmit = (event) => {
     <div className='container'>
       <h1 className='h2'>PASSWORD MANAGER</h1>
       <p>This app helps you securely manage and track your social media account credentials.</p>
+      
       <button onClick={handleSubmit2} className='butt'>Add Account</button>
+      
       <div>
         <select className='sel' value={selectedAccountId} onChange={handleAccountChange}>
           <option value="">Select already existed account</option>
@@ -194,6 +137,7 @@ const handleSubmit = (event) => {
           ))}
         </select>
       </div>
+
       <form onSubmit={handleSubmit}>
         <div>
           <label className='label'>Username:</label>
@@ -204,6 +148,7 @@ const handleSubmit = (event) => {
             onChange={handleChange}
           />
         </div>
+
         <div>
           <label className='label'>Password:</label>
           <input className='input'
@@ -233,9 +178,12 @@ const handleSubmit = (event) => {
             onChange={handleChange}
           />
         </div>
-       
+
         <button type="submit" className='butt'>Edit Above & Update</button>
       </form>
+
+      {/* Display message */}
+      {message && <p>{message}</p>}
     </div>
   );
 }
