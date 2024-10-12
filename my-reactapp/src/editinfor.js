@@ -21,8 +21,18 @@ function EditRecord() {
 
   // Token expiry check function
   const isTokenExpired = (token) => {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.exp * 1000 < Date.now();
+    try {
+      const tokenParts = token.split('.');
+      if (tokenParts.length !== 3) {
+        console.error('Invalid token format.');
+        return true; // Consider token expired if it's invalid
+      }
+      const payload = JSON.parse(atob(tokenParts[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return true; // Treat token as expired on error
+    }
   };
 
   // Fetch data on component load and when selectedAccountId changes
@@ -36,8 +46,7 @@ function EditRecord() {
           return;
         }
 
-        const isExpired = isTokenExpired(token);
-        if (isExpired) {
+        if (isTokenExpired(token)) {
           console.error('Token is expired. Please login again.');
           setMessage('Token is expired. Please login again.');
           return;
@@ -189,6 +198,7 @@ function EditRecord() {
 }
 
 export default EditRecord;
+
 
 
 
