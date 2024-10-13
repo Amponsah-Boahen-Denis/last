@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-
 // Load environment variables
 dotenv.config();
 const app = express();
