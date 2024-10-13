@@ -6,7 +6,7 @@ import './css/edit.css';
 function EditRecord() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   // State for accounts and form data
   const [accounts, setAccounts] = useState([]);
   const [selectedAccountId, setSelectedAccountId] = useState(id);
