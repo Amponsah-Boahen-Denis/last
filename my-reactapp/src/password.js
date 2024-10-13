@@ -134,7 +134,7 @@ function AddPassword() {
         <h1 className="h1">ADD NEW ACCOUNT</h1>
         <div className="div">
           <button className="button1">
-            <Link to={'/'} className="link">Go Back</Link>
+            <Link to={'/edit'} className="link">Go Back</Link>
           </button>
           <form onSubmit={handleSubmit} className="flex2">
             <div className="flex1">
