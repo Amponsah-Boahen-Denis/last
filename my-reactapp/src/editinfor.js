@@ -128,7 +128,7 @@ function EditRecord() {
     localStorage.removeItem('token');
     
     // Navigate to the login or home page
-    navigate('/login'); // Assuming you have a '/login' route
+    navigate('/'); // Assuming you have a '/login' route
   };
 
   return (
