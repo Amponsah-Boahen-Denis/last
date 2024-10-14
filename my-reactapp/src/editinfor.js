@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -130,7 +129,7 @@ function EditRecord() {
     navigate('/'); // Assuming you have a '/login' route
   };
 
-  // Handle delete functionality (simple inline style)
+  // Handle delete functionality
   const handleDelete = async (accountId) => {
     if (window.confirm('Are you sure you want to delete this account?')) {
       try {
@@ -176,14 +175,14 @@ function EditRecord() {
             <button 
               onClick={() => handleDelete(account._id)} 
               style={{ 
-                backgroundColor: 'red', 
-                color: 'white', 
+                backgroundColor: 'transparent', 
+                color: 'black', 
                 border: 'none', 
-                padding: '5px 10px', 
                 cursor: 'pointer', 
-                marginLeft: '10px'
+                marginLeft: '10px',
+                textDecoration: 'underline' // Makes it look clickable
               }}>
-              X
+              Delete
             </button>
           </li>
         ))}
@@ -244,6 +243,7 @@ function EditRecord() {
 }
 
 export default EditRecord;
+
 
 
 
