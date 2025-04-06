@@ -65,7 +65,7 @@ const handleSubmit = async (e) => {
   
   return (
     <div style={styles.container}>
-      <h2 style={styles.header}>Register</h2>
+      <h2 style={styles.header}>Sign Up Here</h2>
       <form onSubmit={handleSubmit} style={styles.form}>
         <input
           type="text"
@@ -94,7 +94,7 @@ const handleSubmit = async (e) => {
           required
           style={styles.input}
         />
-        <button type="submit" style={styles.button}>Register</button>
+        <button type="submit" style={styles.button}>Sign up</button>
       </form>
     </div>
   );
