@@ -63,42 +63,42 @@ const handleSubmit = async (e) => {
 };
 
   
-//   return (
-//     <div style={styles.container}>
-//       <h2 style={styles.header}>Register</h2>
-//       <form onSubmit={handleSubmit} style={styles.form}>
-//         <input
-//           type="text"
-//           name="username"
-//           value={username}
-//           onChange={handleChange}
-//           placeholder="Username"
-//           required
-//           style={styles.input}
-//         />
-//         <input
-//           type="email"
-//           name="email"
-//           value={email}
-//           onChange={handleChange}
-//           placeholder="Email"
-//           required
-//           style={styles.input}
-//         />
-//         <input
-//           type="password"
-//           name="password"
-//           value={password}
-//           onChange={handleChange}
-//           placeholder="Password"
-//           required
-//           style={styles.input}
-//         />
-//         <button type="submit" style={styles.button}>Register</button>
-//       </form>
-//     </div>
-//   );
-// };
+  return (
+    <div style={styles.container}>
+      <h2 style={styles.header}>Register</h2>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <input
+          type="text"
+          name="username"
+          value={username}
+          onChange={handleChange}
+          placeholder="Username"
+          required
+          style={styles.input}
+        />
+        <input
+          type="email"
+          name="email"
+          value={email}
+          onChange={handleChange}
+          placeholder="Email"
+          required
+          style={styles.input}
+        />
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={handleChange}
+          placeholder="Password"
+          required
+          style={styles.input}
+        />
+        <button type="submit" style={styles.button}>Register</button>
+      </form>
+    </div>
+  );
+};
 
 // const styles = {
 //   container: {
@@ -136,42 +136,6 @@ const handleSubmit = async (e) => {
 //     marginTop: '10px',
 //   },
 // };
-return (
-  <div style={styles.container}>
-    <h2 style={styles.header}>Register</h2>
-    <form onSubmit={handleSubmit} style={styles.form}>
-      <input
-        type="text"
-        name="username"
-        value={username}
-        onChange={handleChange}
-        placeholder="Username"
-        required
-        style={styles.input}
-      />
-      <input
-        type="email"
-        name="email"
-        value={email}
-        onChange={handleChange}
-        placeholder="Email"
-        required
-        style={styles.input}
-      />
-      <input
-        type="password"
-        name="password"
-        value={password}
-        onChange={handleChange}
-        placeholder="Password"
-        required
-        style={styles.input}
-      />
-      <button type="submit" style={styles.button}>Register</button>
-    </form>
-  </div>
-);
-
 const styles = {
   container: {
     display: 'flex',
@@ -214,4 +178,5 @@ const styles = {
     marginTop: '5px',
   },
 };
+
 export default Register;
